@@ -328,3 +328,60 @@ describe("checkWinner — result shape", () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// createScoreState
+// ---------------------------------------------------------------------------
+
+describe("createScoreState", () => {
+  test("returns cat: 0 and dog: 0", () => {
+    const s = createScoreState();
+    expect(s.cat).toBe(0);
+    expect(s.dog).toBe(0);
+  });
+
+  test("returns a new object each call", () => {
+    expect(createScoreState()).not.toBe(createScoreState());
+  });
+});
+
+// ---------------------------------------------------------------------------
+// incrementScore
+// ---------------------------------------------------------------------------
+
+describe("incrementScore", () => {
+  test("increments cat score when 🐱 wins", () => {
+    const s = incrementScore({ cat: 0, dog: 0 }, "🐱");
+    expect(s.cat).toBe(1);
+    expect(s.dog).toBe(0);
+  });
+
+  test("increments dog score when 🐶 wins", () => {
+    const s = incrementScore({ cat: 0, dog: 0 }, "🐶");
+    expect(s.cat).toBe(0);
+    expect(s.dog).toBe(1);
+  });
+
+  test("does not change scores on draw (winner === null)", () => {
+    const s = incrementScore({ cat: 3, dog: 5 }, null);
+    expect(s.cat).toBe(3);
+    expect(s.dog).toBe(5);
+  });
+
+  test("does not mutate the original score object", () => {
+    const original = { cat: 1, dog: 2 };
+    const updated = incrementScore(original, "🐱");
+    expect(original.cat).toBe(1);
+    expect(original.dog).toBe(2);
+    expect(updated.cat).toBe(2);
+  });
+
+  test("accumulates multiple wins", () => {
+    let s = { cat: 0, dog: 0 };
+    s = incrementScore(s, "🐱");
+    s = incrementScore(s, "🐱");
+    s = incrementScore(s, "🐶");
+    expect(s.cat).toBe(2);
+    expect(s.dog).toBe(1);
+  });
+});

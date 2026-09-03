@@ -1,9 +1,14 @@
-'use strict';
+"use strict";
 
 const WINNING_COMBOS = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-  [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-  [0, 4, 8], [2, 4, 6],            // diagonals
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // columns
+  [0, 4, 8],
+  [2, 4, 6], // diagonals
 ];
 
 /**
@@ -11,8 +16,8 @@ const WINNING_COMBOS = [
  */
 function createInitialState() {
   return {
-    board:   Array(9).fill(''),
-    current: '🐱',
+    board: Array(9).fill(""),
+    current: "🐱",
     gameOver: false,
   };
 }
@@ -23,7 +28,7 @@ function createInitialState() {
  * @returns {'🐱'|'🐶'}
  */
 function getNextPlayer(current) {
-  return current === '🐱' ? '🐶' : '🐱';
+  return current === "🐱" ? "🐶" : "🐱";
 }
 
 /**
@@ -35,7 +40,7 @@ function getNextPlayer(current) {
  */
 function applyMove(board, index, player) {
   if (index < 0 || index > 8) return null;
-  if (board[index] !== '')    return null;
+  if (board[index] !== "") return null;
   const next = board.slice();
   next[index] = player;
   return next;
@@ -56,11 +61,38 @@ function checkWinner(board) {
       return { winner: board[a], combo };
     }
   }
-  if (board.every(cell => cell !== '')) return { winner: null, combo: [] };
+  if (board.every((cell) => cell !== "")) return { winner: null, combo: [] };
   return null;
 }
 
+/**
+ * Returns the initial score state (both at 0).
+ */
+function createScoreState() {
+  return { cat: 0, dog: 0 };
+}
+
+/**
+ * Increments the score for the given winner.
+ * @param {{ cat: number, dog: number }} score
+ * @param {'🐱'|'🐶'|null} winner
+ * @returns {{ cat: number, dog: number }}
+ */
+function incrementScore(score, winner) {
+  if (winner === "🐱") return { cat: score.cat + 1, dog: score.dog };
+  if (winner === "🐶") return { cat: score.cat, dog: score.dog + 1 };
+  return { cat: score.cat, dog: score.dog };
+}
+
 // Allow require() in Node.js (Jest) while remaining a plain script in the browser.
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { WINNING_COMBOS, createInitialState, getNextPlayer, applyMove, checkWinner };
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    WINNING_COMBOS,
+    createInitialState,
+    getNextPlayer,
+    applyMove,
+    checkWinner,
+    createScoreState,
+    incrementScore,
+  };
 }
