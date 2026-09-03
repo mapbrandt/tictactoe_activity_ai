@@ -43,6 +43,7 @@ The review examined the developer's understanding of the emoji substitution task
 ## Overall Assessment
 
 All three questions targeted different failure modes:
+
 1. **Unicode/surrogate pairs** (encoding correctness)
 2. **CSS identifier constraints** (rendering boundary)
 3. **Convention mismatch** (testing layer robustness)
